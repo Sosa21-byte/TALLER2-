@@ -149,3 +149,159 @@ Controles responsivos
 
 ![Imagen de WhatsApp 2025-10-20 a las 18 25 19_157a41bb](https://github.com/user-attachments/assets/84a98d00-cec9-460c-8b70-8267e9c57312)
 
+🧩 Paso a paso de la instalación y despliegue
+🧱 1. Creación del entorno virtual e instalación de dependencias
+
+Primero se creó y activó un entorno virtual en Python para aislar las dependencias del proyecto. Luego se instalaron los paquetes necesarios para la simulación:
+
+pip install gymnasium pybullet stable-baselines3 matplotlib opencv-python pandas numpy
+
+
+
+![Imagen de WhatsApp 2025-10-20 a las 18 41 15_302b9f28](https://github.com/user-attachments/assets/2513e6c4-4288-456a-9ba4-1254556a6697)
+
+
+⚙️ 2. Creación del Dockerfile
+
+Se elaboró un archivo Dockerfile que contiene las instrucciones para construir la imagen de Docker con todas las dependencias necesarias.
+Este archivo realiza las siguientes acciones:
+
+Instala dependencias del sistema.
+
+Clona el repositorio de pybullet_robots.
+
+Instala PyBullet.
+
+Define el comando por defecto para ejecutar la demo del robot Baxter.
+
+FROM python:3.10-slim
+
+# Instalar dependencias del sistema
+RUN apt-get update && apt-get install -y \
+    git xvfb python3-opengl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Clonar el repositorio de PyBullet Robots
+RUN git clone https://github.com/erwincoumans/pybullet_robots.git
+
+WORKDIR /pybullet_robots
+
+# Instalar PyBullet
+RUN pip install pybullet
+
+# Comando por defecto: ejecutar la demo de Baxter
+CMD ["python3", "baxter_ik_demo.py"]
+
+
+![Imagen de WhatsApp 2025-10-20 a las 18 43 52_02452e04](https://github.com/user-attachments/assets/a21bd882-4350-4d4a-bf9d-c3f592bab225)
+
+
+🧰 3. Construcción de la imagen de Docker
+
+Con el Dockerfile listo, se construyó la imagen de Docker ejecutando:
+
+docker build -t baxter_pybullet .
+
+
+Este comando descargó las dependencias, instaló los paquetes y preparó la imagen llamada baxter_pybullet.
+
+![Imagen de WhatsApp 2025-10-20 a las 18 45 49_02f4eb35](https://github.com/user-attachments/assets/95675fa2-be47-468d-9d85-e62769ec32c8)
+
+
+🧪 4. Verificación del entorno Docker
+
+Para comprobar que el contenedor funcionaba correctamente sin entorno gráfico, se probó la conexión directa con PyBullet:
+
+docker run -it baxter_pybullet python3 -c "import pybullet as p; cid = p.connect(p.DIRECT); print('🔗 Conexión establecida con ID:', cid)"
+
+
+El resultado fue exitoso, mostrando la conexión directa establecida con el entorno PyBullet.
+
+![Imagen de WhatsApp 2025-10-20 a las 18 53 03_d3f5c7f1](https://github.com/user-attachments/assets/8aeca4c4-6d5f-4e46-8072-3bdbc9e89ce4)
+
+
+🤖 5. Ejecución del simulador 3D
+
+Finalmente, se ejecutó el script principal para visualizar el robot Baxter en el entorno 3D:
+
+python3 baxter_ik_demo.py --nogui
+
+
+Esto permitió abrir la interfaz gráfica donde se muestra el modelo del robot, sus cámaras virtuales y parámetros de control.
+
+![Imagen de WhatsApp 2025-10-20 a las 19 20 40_05dd5563](https://github.com/user-attachments/assets/0d3467b3-f6f8-492e-8173-ea0a6e6be80c)
+
+# 🤖 Despliegue del Robot ATLAS en PyBullet usando Docker
+
+🚀 Proceso de Despliegue
+
+# 1️⃣ Configuración del Entorno Virtual e Instalación de Dependencias
+
+![Imagen de WhatsApp 2025-10-20 a las 19 28 27_2745c532](https://github.com/user-attachments/assets/d08ad7ca-8e7b-4c27-80e1-259997bb28d8)
+
+
+´´´bash
+# Crear entorno virtual e instalar dependencias
+python3 -m venv venv
+source venv/bin/activate
+pip install gymnasium pybullet stable-baselines3 matplotlib opencv-python pandas numpy
+´´´
+
+# 2️⃣ Creación del Dockerfile y Construcción de la Imagen
+´´´bash
+![Imagen de WhatsApp 2025-10-20 a las 19 36 24_89d3a297](https://github.com/user-attachments/assets/ae35f5d3-172c-4457-8ead-5aee9246267b)
+
+
+Dockerfile:
+´´´bash
+dockerfile
+FROM python:3.10-slim
+RUN apt-get update && apt-get install -y git xvfb python3-opengl && rm -rf /var/lib/apt/lists/*
+RUN git clone https://github.com/erwincoumans/pybullet_robots.git
+WORKDIR /pybullet_robots
+RUN pip install pybullet numpy
+CMD ["python3", "atlas.py"]
+´´´
+Construcción de la imagen:
+´´´bash
+docker build -t atlas_pybullet .
+´´´
+# 3️⃣ Ejecución del Contenedor y Prueba de Simulación
+
+![Imagen de WhatsApp 2025-10-20 a las 19 36 35_5bbf0a11](https://github.com/user-attachments/assets/fb70cb3a-ad06-4ea4-9f4e-80ba5afc0e95)
+
+Ejecutar en modo headless:
+
+´´´bash
+docker run -it atlas_pybullet python3 atlas.py --nogui
+´´´
+# 4️⃣ Confirmación del Despliegue Exitoso
+
+![Imagen de WhatsApp 2025-10-20 a las 19 38 22_638b00e1](https://github.com/user-attachments/assets/d293edc1-0dc8-4ebe-810e-c59386e3838e)
+
+
+Verificar conexión con PyBullet:
+
+´´´bash
+docker run -it atlas_pybullet python3 -c "import pybullet as p; cid=p.connect(p.DIRECT); print('✅ PyBullet dentro del contenedor, conexión ID:', cid)"
+´´´
+✅ Confirmación del Despliegue Exitoso
+
+# Salida esperada en terminal:
+pybullet build time: Jan 29 2025 23:16:28
+✅ PyBullet dentro del contenedor, conexión ID: 0
+🎉 Estado Final del Despliegue
+El robot ATLAS ha sido desplegado exitosamente en un contenedor Docker con PyBullet. La configuración incluye:
+
+
+# 🛠️ Comandos Adicionales Útiles
+´´´bash
+# Ejecutar con interfaz gráfica (requiere X11 forwarding)
+docker run -it -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix atlas_pybullet
+
+# Inspeccionar la imagen creada
+docker images | grep atlas_pybullet
+
+# Ejecutar shell interactiva en el contenedor
+docker run -it atlas_pybullet /bin/bash
+´´´
