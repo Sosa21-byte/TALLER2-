@@ -1,8 +1,5 @@
 # TALLER2
 Desarrollado por Edward Sosa y Juan Zapata 
-
-text
-
 Este README incluye:
 
 ✅ **Todos los pasos que seguimos** desde la instalación hasta la ejecución exitosa  
@@ -149,8 +146,9 @@ Controles responsivos
 
 ![Imagen de WhatsApp 2025-10-20 a las 18 25 19_157a41bb](https://github.com/user-attachments/assets/84a98d00-cec9-460c-8b70-8267e9c57312)
 
-🧩 Paso a paso de la instalación y despliegue
-🧱 1. Creación del entorno virtual e instalación de dependencias
+# 🧩 Paso a paso de la instalación y despliegue
+
+# 🧱 1. Creación del entorno virtual e instalación de dependencias
 
 Primero se creó y activó un entorno virtual en Python para aislar las dependencias del proyecto. Luego se instalaron los paquetes necesarios para la simulación:
 
